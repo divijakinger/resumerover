@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Page</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rationale&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jscharting.com/2.9.0/jscharting.js"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+</head>
+<style>
+    body{
+    background-color: #25252d;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+}
+
+    #nav-text{
+        font-family: 'Rationale', sans-serif;
+        font-size: 1.5vw;
+    }
+
+    .navA {
+        padding:0.5rem;
+        text-decoration: none;
+        border-bottom: 2px solid transparent;
+        border-left: 2px solid transparent;
+        border-top: 2px solid transparent;
+        border-right: 2px solid transparent;
+        transition: background .1s, border-bottom .2s, border-left .4s, border-top .6s, border-right .9s;
+    }
+
+    .navA:hover{
+        background: transparent;
+        transition: background .9s, border-bottom .1s .3s, border-left .7s 1s, border-top .6s .7s, border-right .3s .5s;
+        border-bottom: 2px solid rgb(255, 255, 255);
+        border-left: 2px solid rgb(255, 255, 255);
+        border-top: 2px solid rgb(255, 255, 255);
+        border-right: 2px solid rgb(255, 255, 255);
+    }
+
+    .data-cards{
+        background: #373641;
+        border-radius: 25px;
+        width: 100%;
+        height: fit-content;
+    }
+
+    #sort-box{
+        background-color: #3f3e4b;
+        font-size: large;
+    }
+
+    #dashboard{
+        background-color: #272727;
+    }
+    
+
+
+
+</style>
+<body>
+    <nav class="nav ms-5 pt-2" id="nav-text">
+        <a class="nav-link navA" href="home.html" style="color: rgb(255, 255, 255);">HOME</a>
+        <a class="nav-link navA" href="aboutus.html" style="color: rgb(255, 255, 255);">ABOUT US</a>
+        <a class="nav-link navA active" href="try.html" style="color: rgb(255, 255, 255)">TRY IT OUT</a>
+    </nav>
+
+    <div class="container">
+        <!-- Button trigger modal -->
+        <div class="d-flex justify-content-between">
+            <button type="button" class="btn m-3" style="background-color: #03DAC5;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Screen Your Resumes
+            </button>
+            <button onclick="generatePDF()" class="btn btn-outline-warning m-3">Download as PDF</button>
+        </div>
+        <div id="skills-box"></div>
+        <div class="row m-5 p-5 d-none" id="sort-box">
+            <div id="dashboard">
+                <div class="row">
+                    <div id="analytics-1" class="col-3 p-2 m-4"></div>
+                    <div id="analytics-2" class="col-4 p-3 m-4">
+                        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                    </div>
+                    <div id="analytics-3" class="col-3 p-3 m-4" style="font-size: 30px;">
+                        TOP SKILLS:
+                        <ul class="list-group mt-3" id="skills-analytics"> 
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="form-check col-md-4 mt-5">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onclick="get_sorted_matches()">
+                <label class="form-check-label" for="flexRadioDefault1">
+                    Sort By Match
+                </label>
+            </div>
+            <div class="form-check col-md-4 mt-5">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onclick="get_best_match()">
+                <label class="form-check-label" for="flexRadioDefault2">
+                    Get Best Match
+                </label>
+            </div>
+            <div class="form-check col-md-4 mt-5">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" onclick="get_top_matches()" >
+                <label class="form-check-label" for="flexRadioDefault3">
+                    Get Top 5 Matches
+                </label>
+            </div>
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="color: #121212;">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Screen Your Resumes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="job-desc-input" class="form-label">Enter the Job Description For Your Role</label>
+                        <textarea class="form-control" id="job-desc-input" rows="10"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="modal-close" data-bs-dismiss="modal">Close</button>
+                <button type="button" onclick="job_desc_search()" class="btn btn-outline-primary m-2">SUBMIT</button>
+            </div>
+            </div>
+            </div>
+        </div>
+        <div id="display-div" class="mt-lg-5 p-1">
+            
+        </div>     
+    </div>
+</body>
+<script>
+    var resume_data ;
+    var resume_analytics;
+    var display_div = document.getElementById("display-div");
+    var skills_perc = [];
+    var skills_arr = [];
+    fetch('http://127.0.0.1:5000/getData')
+            .then(function (response) {
+                return response.json()
+            }).then(function (text){
+                resume_data = text;
+                render_resumes()
+            });
+    
+            
+    function get_sorted_matches(){
+        skills_perc = []
+        fetch('http://127.0.0.1:5000/sortbymatch')
+            .then(function (response) {
+                return response.json()
+            }).then(function (text){
+                resume_data = text;
+                for (var i=0;i<text['data'].length;i++){
+                    var curr = text['data'][i]
+                    console.log(curr.match_percentage)
+                    skills_perc.push(curr.match_percentage)
+                }
+                render_resumes()
+                add_perc()
+            });
+    }
+
+    function get_best_match(){
+        skills_perc = []
+        fetch('http://127.0.0.1:5000/bestmatch')
+            .then(function (response) {
+                return response.json()
+            }).then(function (text){
+                resume_data = text;
+                console.log(text)
+                for (var i=0;i<text['data'].length;i++){
+                    var curr = text['data'][i]
+                    console.log(curr.match_percentage)
+                    skills_perc.push(curr.match_percentage)
+                }
+                render_resumes()
+                add_perc()
+            });
+    }
+
+    function get_top_matches(){
+        skills_perc = []
+        fetch('http://127.0.0.1:5000/topfive')
+            .then(function (response) {
+                return response.json()
+            }).then(function (text){
+                resume_data = text;
+                console.log(text)
+                for (var i=0;i<text['data'].length;i++){
+                    var curr = text['data'][i]
+                    console.log(curr.match_percentage)
+                    skills_perc.push(curr.match_percentage)
+                }
+                render_resumes()
+                add_perc()
+            });
+    }
+
+    function remove_skill(ele,index){
+        console.log(ele.textContent)
+        skills_arr.splice(index, 1)
+        ele.parentNode.removeChild(ele)
+        console.log(skills_arr)
+        if (skills_arr.length>0){
+            skill_search()
+        } else {
+            fetch('http://127.0.0.1:5000/getData')
+            .then(function (response) {
+                return response.json()
+            }).then(function (text){
+                resume_data = text;
+                render_resumes()
+            });
+        }
+        
+    }
+
+    function skills_search_func(skill){
+        console.log(skill.textContent)
+        if (!skills_arr.includes(skill.textContent)){
+            skills_arr.push(skill.textContent)
+        }        
+        console.log(skills_arr)
+        skills_str = ''
+        for (i in skills_arr){
+            console.log(skills_arr[i])
+            skills_str += `<span class="btn m-1" style="background-color: #018786; margin: 5px 2px 5px 2px; border-radius: 15px;color:white" onclick="remove_skill(this,${i})">${skills_arr[i]} <i class="bi bi-x"></i></span>`
+        }
+
+        document.getElementById("skills-box").innerHTML = skills_str;
+        skill_search()
+
+    }
+
+    function skill_search(){
+        console.log(skills_arr)
+        var data = {
+            "skills_given":skills_arr
+        }
+        const url = "http://127.0.0.1:5000/skillfilter"
+
+        const other_params = {
+            method: "POST",
+            mode:"cors",
+            headers: {
+            'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
+
+        fetch(url, other_params)
+        .then((response) => response.json())
+            //Then with the data from the response in JSON...
+            .then((text) => {
+                console.log(text)
+                // skills_perc = (data['Percentage']);
+                // document.getElementById("modal-close").click()
+                // add_perc();
+                resume_data = text;
+                render_resumes()
+            })
+            //Then with the error genereted...
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+    function render_resumes(){
+        var resume_str='';
+        console.log(resume_data)
+        for (var i=0;i<resume_data['data'].length;i++){
+            var curr = resume_data['data'][i]
+            var skills = (curr.Skills)
+            var education = (curr.College)
+            var job_data = (curr.Job_data)
+            var degree = (curr.Degree)
+            var urls = (curr.Urls)
+            var languages = (curr.Languages)
+            var edu_str = '';
+            var exp_str = '';
+            var deg_str = '';
+            var skill_str = '';
+            var url_str = '';
+            var lang_str = '';
+
+            for (var j = 0;j<education.length;j++){
+                edu_str += `<li>${education[j]}</li>`
+            }
+
+            for (var k = 0;k<job_data.length;k++){
+                exp_str += `<tr> <th scope="row">${k+1}</th>`
+                 for (var l = 0;l<3;l++){
+                     exp_str += `<td>${job_data[k][l]}</td>`
+                 }
+                exp_str += `</tr>`
+            }
+
+            
+            for (var m = 0;m<degree.length;m++){
+                deg_str += `<li>${degree[m]}</li>`
+            }
+
+            for (var n = 0;n < skills.length; n++){
+                skill_str += `<span class="btn m-1" style="background-color: #BB86FC; margin: 5px 2px 5px 2px; border-radius: 15px" onclick="skills_search_func(this)">${skills[n]}</span>`
+            }
+
+            for (var o=0;o<Object.keys(urls).length;o++){
+                if (Object.values(urls)[o] != "None"){
+                    url_str += `<img src=${Object.values(urls)[o]} width="32" height="32" style="object-fit: contain;">
+                    <a href=${Object.keys(urls)[o]}>${Object.keys(urls)[o]}</a>
+                    <br>`
+                } else {
+                    url_str += `<a href=${Object.keys(urls)[o]}>${Object.keys(urls)[o]}</a>
+                    <br>`
+                }
+            }
+
+            for (var p=0;p<languages.length;p++){
+                lang_str += `<span class="badge p-2 m-2" style="background-color:#00838F">${languages[p]}</span>`
+            }
+
+            resume_str += `
+            <div class="row-${i} m-2 mb-4 p-3 data-cards" id="resume-card-${i}">
+                <div class="row mb-2">
+                    <div class="col-1">
+                        <canvas id="user-icon-${i}" width="64" height="64" style="border-radius:50%;"></canvas>
+                    </div>
+                    <div class="col-11 d-flex justify-content-start mt-3">
+                        <h1>${curr.Name}</h1>
+                        <br>
+                    </div>
+                    <hr>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-3">
+                        <i class="bi bi-telephone-fill"></i> ${curr.Phone}
+                        <br>
+                        <i class="bi bi-envelope-fill"></i> ${curr.Email}
+                    </div>
+                    <div class="col-md-3">
+                        <h5>EDUCATION :</h5>
+                        ${edu_str}
+                        <br>
+                    </div>
+                    <div class="col-md-3 mt-4">
+                        <h5></h5>
+                        ${deg_str}
+                    </div>
+                    <div class="col-md-3" id="skills-${i}">
+                    </div>
+                </div>
+                <table class="table table-dark mt-4">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">JOB ROLE</th>
+                    <th scope="col">DURATION</th>
+                    <th scope="col">COMPANY</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${exp_str}
+                </tbody>
+                </table>
+                <div class="container p-2 mt-2">
+                    <b>LINKS: </b>
+                    <br>
+                    ${url_str}
+                </div>
+                <div class="container p-2 mt-2">
+                    <b>LANGUAGES: </b>
+                    <br>
+                    ${lang_str}
+                </div>
+                <div class="container p-2 mt-2">
+                    <b>SKILLS:</b>
+                    <br>
+                    ${skill_str}
+                </div>
+                <hr>
+                <div class="container p-2 mt-2">
+                    <b>SYNOPSIS:</b>
+                    <br>
+                    ${curr.Synopsis}
+                </div>
+            </div>`
+        }
+
+        
+        display_div.innerHTML = resume_str;
+
+        for (var z=0;z<resume_data['data'].length;z++){
+            var curr = resume_data['data'][z]
+            generate_avatar(curr.Name,z)
+        }
+        
+    }
+
+    function generate_avatar(name,i){
+        var colours = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50", "#f1c40f", "#e67e22", "#e74c3c", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"];
+        
+        try {
+            nameSplit = name.split(" ");
+            initials = nameSplit[0].charAt(0).toUpperCase() + nameSplit[1].charAt(0).toUpperCase();
+        } catch(err) {
+            initials = "XY"
+        }
+
+        var charIndex = initials.charCodeAt(0) - 65,
+            colourIndex = charIndex % 19;
+
+        var canvas = document.getElementById(`user-icon-${i}`);
+        var context = canvas.getContext("2d");
+
+        var canvasWidth = $(canvas).attr("width"),
+            canvasHeight = $(canvas).attr("height"),
+            canvasCssWidth = canvasWidth,
+            canvasCssHeight = canvasHeight;
+
+        if (window.devicePixelRatio) {
+            $(canvas).attr("width", canvasWidth * window.devicePixelRatio);
+            $(canvas).attr("height", canvasHeight * window.devicePixelRatio);
+            $(canvas).css("width", canvasCssWidth);
+            $(canvas).css("height", canvasCssHeight);
+            context.scale(window.devicePixelRatio, window.devicePixelRatio);
+        }
+
+        context.fillStyle = colours[colourIndex];
+        context.fillRect (0, 0, canvas.width, canvas.height);
+        context.font = "30px Arial";
+        context.textAlign = "center";
+        context.fillStyle = "#FFF";
+        context.fillText(initials, canvasCssWidth / 2, canvasCssHeight / 1.5);
+    }
+
+    function add_perc(){
+        for (var x=0;x<resume_data['data'].length;x++){
+            skill_perc_str = '';
+            if (skills_perc.length>0){
+                if (skills_perc[x]>=70){
+                    skill_perc_str = 
+                    `<div class="alert" style="background-color:#20C997" role="alert">
+                       Match Percentage : ${skills_perc[x]}%
+                    </div>`
+                }
+                else if (skills_perc[x]>40){
+                    skill_perc_str = 
+                    `<div class="alert" style="background-color:#FEDB6A" role="alert">
+                        Match Percentage : ${skills_perc[x]}%
+                    </div>`
+                }
+                else {
+                    skill_perc_str = 
+                    `<div class="alert" style="background-color:#CF6679" role="alert">
+                        Match Percentage : ${skills_perc[x]}%
+                    </div>`
+                }
+                document.getElementById(`skills-${x}`).innerHTML = skill_perc_str;
+            }
+        }
+
+    }
+
+    function job_desc_search() {
+        document.getElementById("sort-box").classList.remove("d-none")
+        var job_desc = document.getElementById("job-desc-input")
+
+        var job_description = job_desc.value;
+            var data = {
+                "job_desc":job_description
+            }
+            const url = "http://127.0.0.1:5000/metrics"
+
+            const other_params = {
+                method: "POST",
+                mode:"cors",
+                headers: {
+                'Content-Type' : 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+
+            fetch(url, other_params)
+            .then((response) => response.json())
+                //Then with the data from the response in JSON...
+                .then((data) => {
+                    console.log(data)
+                    skills_perc = (data['Metrics']);
+                    job_desc.value=''
+                    document.getElementById("modal-close").click()
+                    show_analytics();
+                    add_perc();
+                })
+                //Then with the error genereted...
+                .catch((error) => {
+                    console.error('Error:', error);
+                }); 
+    } 
+
+    function show_analytics(){
+        fetch('http://127.0.0.1:5000/analytics')
+            .then(function (response) {
+                return response.json()
+            }).then(function (text){
+                resume_analytics = text;
+                render_dashboards()
+            });
+    }
+
+    function render_dashboards(){
+        console.log(resume_analytics)
+        dataPoints_list = []
+        var label_name;
+        for (var i=0;i<resume_analytics['percentage_table'].length;i++){
+            if (i==0){
+                label_name = "0%-40%"
+            } else if(i==1){
+                label_name = "40%-70%"
+            } else {
+                label_name = "70%-100%"
+            }
+            dataPoints_list.push({
+                y:`${resume_analytics.percentage_table[i]}`,
+                label: label_name
+            })
+        }
+        CanvasJS.addColorSet("purpleShades",
+                [//colorSet Array
+
+                "#01A299",
+                "#C8FFF4",
+                "#7F23FC",
+                "#00B3A6",
+                "#03DBC4"                
+        ]);
+        
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            backgroundColor: "#272727",
+            colorSet: "purpleShades",
+            title:{
+                text: "Percentage Range Analytics",
+                horizontalAlign: "left",
+                fontFamily: "tahoma",
+                fontColor: "white",
+            },
+            data: [{
+                indexLabelFontSize: 20,
+                indexLabelFontFamily: "Garamond",
+                indexLabelFontColor: "white",
+                indexLabelLineColor: "white",
+                indexLabelPlacement: "outside",
+                type: "doughnut",
+                startAngle: 60,
+                //innerRadius: 60,
+                indexLabelFontSize: 17,
+                // indexLabel: "{label} - #percent%",
+                toolTipContent: "<b>{label}:</b> {y}",
+                dataPoints: dataPoints_list,
+            }]
+        });
+        chart.render();
+
+        var highest_perc_str = `<div class="card align-middle mt-2" style="background-color: #FF7496; height: 80%;text-align:center;">
+            <div class="card-body">
+                <span style="font-size:30px;">HIGHEST PERCENTAGE MATCH</span>
+                <span class="align-middle" style="font-size:100px;">${resume_analytics.highest_percentage}%</span>
+            </div>
+        </div>`
+
+        document.getElementById("analytics-1").innerHTML = highest_perc_str;
+
+        var skills_list_str = "";
+        for (var i=0;i<resume_analytics['top_skills'].length;i++){
+            skills_list_str += `<li class="list-group-item" style="background-color: #9F55FD; font-size: 20px;text-align:center; color:#ffffff;">${resume_analytics['top_skills'][i]}</li>`
+        }
+
+        document.getElementById("skills-analytics").innerHTML = skills_list_str;
+        
+    }
+
+    function generatePDF() {
+				// Choose the element that our invoice is rendered in.
+				const element = document.getElementById('display-div');
+				// Choose the element and save the PDF for our user.
+				html2pdf().from(element).save();
+	}
+    // render_resumes()
+    
+</script>
+</html>
