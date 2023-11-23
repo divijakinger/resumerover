@@ -60,18 +60,9 @@ Visit `http://localhost:5000` in your browser to witness the magic!
 
 5. Upload resumes and experience the future of recruiting!
 
-## 🎩 Contribution Guidelines
-
-We welcome contributions! Whether you're a coding wizard, UI/UX virtuoso, or just passionate about recruitment, join us on this adventure. Check out our [contribution guidelines](CONTRIBUTING.md) to get started.
 
 ## 📝 License
 
 This project is licensed under the [MIT License](LICENSE).
-
-## 📬 Contact Us
-
-Have questions, ideas, or just want to chat? Reach out to us at [resume.rover@example.com](mailto:resume.rover@example.com).
-
----
 
 Remember, with ResumeRover, the stars align for seamless hiring. Embrace the future of recruitment! 🌠 Happy hiring!
