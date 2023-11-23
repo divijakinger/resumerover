@@ -24,7 +24,7 @@ ResumeRover is not just a resume parser; it's your AI co-pilot on the journey to
 ## 🛠 Installation
 
 ```bash
-git clone https://github.com/your_username/ResumeRover.git
+git clone https://github.com/divijakinger/resumerover.git
 cd ResumeRover
 pip install -r requirements.txt
 python app.py
