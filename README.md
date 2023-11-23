@@ -2,8 +2,8 @@
 
 Welcome to ResumeRover, where innovation meets recruitment efficiency! 🌟
 
-[![GitHub license](https://img.shields.io/github/license/your_username/your_reponame.svg)](https://github.com/your_username/your_reponame/blob/main/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/your_username/your_reponame.svg)](https://github.com/your_username/your_reponame/stargazers)
+[![GitHub license](https://img.shields.io/github/license/your_username/your_reponame.svg)](https://github.com/divijakinder/resumeparser/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/your_username/your_reponame.svg)](https://github.com/divijakinger/resumeparser/stargazers)
 
 ## 📋 Overview
 
